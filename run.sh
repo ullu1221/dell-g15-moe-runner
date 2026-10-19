@@ -34,9 +34,11 @@ echo "  • Model:        $(basename "$MODEL_PATH")"
 if [[ -n "${MMPROJ_PATH:-}" && -f "$MMPROJ_PATH" ]]; then
     echo "  • Vision:       $(basename "$MMPROJ_PATH")"
 fi
-echo "  • VRAM Offload: Non-MoE Attention + Head on RTX 3050 (CUDA)"
+echo "  • VRAM Offload: Non-MoE Attention + Head + 4 MoE Layers on RTX 3050"
 echo "  • MoE Offload:  $N_CPU_MOE Expert Layers on CPU DDR5 RAM"
 echo "  • Hot Cache:    $MOE_CACHE_MIB MiB VRAM Expert Cache"
+echo "  • DMA Speedup:  Host-Registered Pinned DDR5 Direct DMA (GGML_CUDA_REGISTER_HOST=1)"
+echo "  • Prefetch:     Async Double-Buffered Stream (GGML_SCHED_PREFETCH_EXPERTS=1)"
 echo "  • P-Cores:      $THREADS Physical P-Cores Dedicated"
 echo "  • KV Cache:     Quantized $CACHE_TYPE_K / $CACHE_TYPE_V (FlashAttention: $FLASH_ATTN)"
 echo "  • Web UI:       http://${HOST}:${PORT}"

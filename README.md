@@ -58,14 +58,27 @@ You can customize runtime parameters in `config.env`:
 | :--- | :--- | :--- |
 | `CONTEXT_SIZE` | `8192` | Context window length in tokens |
 | `THREADS` | `6` | Physical performance cores (6 P-cores on i5-13450HX) |
-| `N_CPU_MOE` | `40` | Number of expert layers evaluated on CPU |
-| `MOE_CACHE_MIB`| `512` | Size of hot-expert cache in fast VRAM (MiB) |
+| `N_CPU_MOE` | `36` | Expert layers evaluated on CPU (4 full layers kept on GPU) |
+| `MOE_CACHE_MIB`| `1024` | Size of hot-expert cache in fast VRAM (MiB) |
+| `GGML_CUDA_REGISTER_HOST` | `1` | DMA host-pinned direct PCIe memory transfers (~20 GB/s) |
+| `GGML_SCHED_PREFETCH_EXPERTS` | `1` | Dual-stream asynchronous CUDA expert prefetching |
 | `PORT` | `8080` | Local web server and API port |
 | `FLASH_ATTN` | `on` | FlashAttention memory optimization |
 
 ---
 
-## 4. Hardware Profiles Integration
+## 4. Live Benchmark Results (Dell G15 5530)
+
+Measured via `llama-bench` on **`Qwen3.6-35B-A3B (Q4_K_M)`** (RTX 3050 6GB Laptop GPU + 16GB DDR5):
+
+| Configuration | Prompt Processing (`pp128`) | Token Generation (`tg32`) | VRAM Used |
+| :--- | :--- | :--- | :--- |
+| **Baseline** (`-ncmoe 40`, 512M cache, unpinned) | 31.25 t/s | 6.06 t/s | ~2.8 GiB |
+| **Optimized** (`-ncmoe 36`, 1024M cache, DMA pinned) | **37.01 t/s (+18%)** | **13.03 t/s (+115% / 2.15x)** | **~4.0 GiB** |
+
+---
+
+## 5. Hardware Profiles Integration
 
 This runner automatically invokes [`hpc-perf`](https://github.com/ullu1221/hpc-system-profiles) upon launch, activating the `AI` profile:
 - 95W sustained CPU package power (Intel RAPL).
