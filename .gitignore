@@ -1,0 +1,9 @@
+# Ignore heavy compiled runtime and downloaded libraries (restored via ./setup.sh)
+runtime/
+
+# Ignore multi-gigabyte GGUF model files
+models/*.gguf
+*.gguf
+
+# Ignore runtime logs
+*.log
