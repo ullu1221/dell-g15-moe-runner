@@ -5,7 +5,7 @@
 # ==============================================================================
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
 RUNTIME_DIR="${SCRIPT_DIR}/runtime"
 
 # Source default settings from config.env
